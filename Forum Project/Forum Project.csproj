@@ -6,6 +6,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201007043046_SeedingData.cs" />
+    <Compile Remove="Migrations\20201007043046_SeedingData.Designer.cs" />
+    <Compile Remove="Migrations\20201007043649_SeedingData2.cs" />
+    <Compile Remove="Migrations\20201007043649_SeedingData2.Designer.cs" />
+    <Compile Remove="Migrations\20201007045210_SeedingData3.cs" />
+    <Compile Remove="Migrations\20201007045210_SeedingData3.Designer.cs" />
+    <Compile Remove="Migrations\20201007045303_SeedData4.cs" />
+    <Compile Remove="Migrations\20201007045303_SeedData4.Designer.cs" />
+    <Compile Remove="Migrations\20201007063309_SeedData2.cs" />
+    <Compile Remove="Migrations\20201007063309_SeedData2.Designer.cs" />
+    <Compile Remove="Migrations\20201007064331_SeedData3.cs" />
+    <Compile Remove="Migrations\20201007064331_SeedData3.Designer.cs" />
+    <Compile Remove="Migrations\20201007064734_SeedData4.cs" />
+    <Compile Remove="Migrations\20201007064734_SeedData4.Designer.cs" />
+    <Compile Remove="Migrations\20201007065235_SeedData5.cs" />
+    <Compile Remove="Migrations\20201007065235_SeedData5.Designer.cs" />
+    <Compile Remove="Migrations\20201007065621_seed.cs" />
+    <Compile Remove="Migrations\20201007065621_seed.Designer.cs" />
+    <Compile Remove="Migrations\20201007065847_seed.cs" />
+    <Compile Remove="Migrations\20201007065847_seed.Designer.cs" />
+    <Compile Remove="Migrations\20201007070731_seed.cs" />
+    <Compile Remove="Migrations\20201007070731_seed.Designer.cs" />
+    <Compile Remove="Migrations\20201007072003_seed2.cs" />
+    <Compile Remove="Migrations\20201007072003_seed2.Designer.cs" />
+    <Compile Remove="Migrations\20201007072245_seed.cs" />
+    <Compile Remove="Migrations\20201007072245_seed.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="4.5.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
