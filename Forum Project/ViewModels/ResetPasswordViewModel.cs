@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Forum_Project.ViewModels
 {
-    public class LoginViewModel
+    public class ResetPasswordViewModel
     {
         [Required]
         [EmailAddress]
@@ -17,9 +16,11 @@ namespace Forum_Project.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me")]
-        public bool RememberMe { get; set; }
-        public string ReturnUrl { get; set; }
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "Password and Confirm Password must match")]
+        public string ConfirmPassword { get; set; }
+
+        public string Token { get; set; }
     }
 }

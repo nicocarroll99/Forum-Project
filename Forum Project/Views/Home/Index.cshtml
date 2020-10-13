@@ -2,11 +2,24 @@
     ViewData["Title"] = "Home Page";
 }
 
+@inject SignInManager<ApplicationUser> signInManager;
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
 <form method="post">
-    <button asp-action="Initialize" asp-controller="Home" type="submit" class="btn btn-primary">Generate Users</button>
+    @if (signInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            <button asp-action="Initialize" asp-controller="Home" type="submit" class="btn btn-primary" style="width:auto">Switch to User</button>
+        }
+        else
+        {
+            <button asp-action="Initialize" asp-controller="Home" type="submit" class="btn btn-primary" style="width:auto">Switch to Admin</button>
+        }
+    }
+
 </form>

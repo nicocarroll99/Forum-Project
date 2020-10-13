@@ -40,36 +40,25 @@ namespace Forum_Project.Controllers
         }
 
         /// <summary>
-        /// Seeds data for our group users and sets the roles to admin. Should be deleted before completion.
+        /// Allows user to switch between user and admin. Should be deleted before completion.
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Initialize()
         {
-            IdentityRole identityRole = new IdentityRole
-            {
-                Name = "Admin"
-            };
+            var user = await userManager.GetUserAsync(User);
 
-            await roleManager.CreateAsync(identityRole);
-
-            ApplicationUser[] users = new ApplicationUser[5];
-
-            users[0] = new ApplicationUser {UserName = "joshcarter@gmail.com", Email = "joshcarter@gmail.com"};
-            users[1] = new ApplicationUser { UserName = "nicholascarroll@gmail.com", Email = "nicholascarroll@gmail.com" };
-            users[2] = new ApplicationUser { UserName = "minhhua@gmail.com", Email = "minhhua@gmail.com" };
-            users[3] = new ApplicationUser { UserName = "dylanlawson@gmail.com", Email = "dylanlawson@gmail.com" };
-            users[4] = new ApplicationUser { UserName = "jonathanpollock@gmail.com", Email = "jonathanpollock@gmail.com" };
-
-            foreach (var user in users)
-            {
-                var result = await userManager.CreateAsync(user, "temppassword440");
-            }
-
-            foreach (var user in users)
+            // If user is not an admin, add to admin role
+            if (!User.IsInRole("Admin"))
             {
                 await userManager.AddToRoleAsync(user, "Admin");
+            }
+            // If user is an admin, remove them from the admin role and add them to user incase they are not already one
+            else
+            {
+                await userManager.RemoveFromRoleAsync(user, "Admin");
+                await userManager.AddToRoleAsync(user, "User");
             }
 
             return View("Index");
