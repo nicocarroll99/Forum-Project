@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
+using System;
 
 namespace Forum_Project
 {
@@ -47,6 +48,14 @@ namespace Forum_Project
                 options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
             });
 
+            // Sets the lifespan of all tokens
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+                        o.TokenLifespan = TimeSpan.FromHours(5));
+
+            // Overrides the lifespan and sets it for a specifc token type
+            services.Configure<CustomEmailConfirmationTokenProviderOptions>(o =>
+                        o.TokenLifespan = TimeSpan.FromDays(3));
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("DeleteRolePolicy",
@@ -80,7 +89,12 @@ namespace Forum_Project
                 options.Password.RequireUppercase = false;
 
                 options.SignIn.RequireConfirmedEmail = true;
-            }).AddEntityFrameworkStores<ForumDbContext>().AddDefaultTokenProviders();
+
+                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+            })
+            .AddEntityFrameworkStores<ForumDbContext>()
+            .AddDefaultTokenProviders()
+            .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
 
             services.AddMailKit(options => options.UseMailKit(Configuration.GetSection("Email").Get<MailKitOptions>()));
 
@@ -88,6 +102,7 @@ namespace Forum_Project
 
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
+            services.AddSingleton<DataProtectionPurposeStrings>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

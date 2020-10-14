@@ -37,6 +37,93 @@ namespace Forum_Project.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var user = await userManager.GetUserAsync(User);
+
+            var userHasPassword = await userManager.HasPasswordAsync(user);
+
+            if (!userHasPassword)
+            {
+                return RedirectToAction("AddPassword");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+                if(user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    return View();
+                }
+
+                await signInManager.RefreshSignInAsync(user);
+                return View("ChangePasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddPassword()
+        {
+            var user = await userManager.GetUserAsync(User);
+
+            var userHasPassword = await userManager.HasPasswordAsync(user);
+
+            if (userHasPassword)
+            {
+                return RedirectToAction("ChangePassword");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPassword(AddPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(User);
+
+                var result = await userManager.AddPasswordAsync(user, model.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    return View();
+                }
+
+                await signInManager.RefreshSignInAsync(user);
+
+                return View("AddPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
@@ -318,9 +405,13 @@ namespace Forum_Project.Controllers
                         await userManager.CreateAsync(user);
                     }
 
-                    // Create a login and sign in the user
+                    // Create a login, confirm email, and sign in the user
                     await userManager.AddLoginAsync(user, info);
                     await signInManager.SignInAsync(user, isPersistent: false);
+
+                    // Generate a token to confirm user email
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    await userManager.ConfirmEmailAsync(user, token);
 
                     return LocalRedirect(returnUrl);
                 }
