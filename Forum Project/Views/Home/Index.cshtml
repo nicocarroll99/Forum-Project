@@ -9,6 +9,8 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
+<a class="btn btn-primary" asp-action="AddForum" asp-controller="Forum">Add Forum</a>
+
 <form method="post">
     @if (signInManager.IsSignedIn(User))
     {

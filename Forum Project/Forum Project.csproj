@@ -33,6 +33,16 @@
     <Compile Remove="Migrations\20201007072003_seed2.Designer.cs" />
     <Compile Remove="Migrations\20201007072245_seed.cs" />
     <Compile Remove="Migrations\20201007072245_seed.Designer.cs" />
+    <Compile Remove="Migrations\20201014052209_thread.cs" />
+    <Compile Remove="Migrations\20201014052209_thread.Designer.cs" />
+    <Compile Remove="Migrations\20201014080306_threads.cs" />
+    <Compile Remove="Migrations\20201014080306_threads.Designer.cs" />
+    <Compile Remove="Migrations\20201014080833_posts.cs" />
+    <Compile Remove="Migrations\20201014080833_posts.Designer.cs" />
+    <Compile Remove="Migrations\20201014081957_posts.cs" />
+    <Compile Remove="Migrations\20201014081957_posts.Designer.cs" />
+    <Compile Remove="Migrations\20201014082221_posts.cs" />
+    <Compile Remove="Migrations\20201014082221_posts.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
