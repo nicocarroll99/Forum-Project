@@ -37,25 +37,25 @@ namespace Forum_Project.Models
             modelBuilder.Entity<Posts>()
                 .Property(b => b.Children).HasDefaultValue(0);
 
-            modelBuilder.Entity<Threads>()
-                .HasOne(e => e.ForumIdFK)
-                .WithOne();
+            //modelBuilder.Entity<Threads>()
+            //    .HasOne(e => e.ForumIdFK)
+            //    .WithOne();
 
-            modelBuilder.Entity<Threads>()
-                .HasOne(e => e.UserIdFK)
-                .WithOne();
+            //modelBuilder.Entity<Threads>()
+            //    .HasOne(e => e.UserIdFK)
+            //    .WithOne();
 
-            modelBuilder.Entity<Posts>()
-                .HasOne(e => e.ThreadIdFK)
-                .WithOne();
+            //modelBuilder.Entity<Posts>()
+            //    .HasOne(e => e.ThreadIdFK)
+            //    .WithOne();
 
-            modelBuilder.Entity<Posts>()
-                .HasOne(e => e.ParentIdFK)
-                .WithOne();
+            //modelBuilder.Entity<Posts>()
+            //    .HasOne(e => e.ParentIdFK)
+            //    .WithOne();
 
-            modelBuilder.Entity<Posts>()
-                .HasOne(e => e.UserIdFK)
-                .WithOne();
+            //modelBuilder.Entity<Posts>()
+            //    .HasOne(e => e.UserIdFK)
+            //    .WithOne();
                 
         }
     }

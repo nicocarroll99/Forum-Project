@@ -1,0 +1,12 @@
+﻿body {
+    font-family: Arial, Arial, Helvetica, sans-serif;
+}
+.category{
+    background-color: #45B8FF;
+}
+.forum-col{
+    min-width: 256px;
+}
+.last-post-col{
+    min-width: 192px;
+}

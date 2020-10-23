@@ -3,18 +3,36 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Forum_Project.Migrations
 {
-    public partial class threads : Migration
+    public partial class ForumMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Forums",
+                columns: table => new
+                {
+                    ForumId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    ForumName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Forums", x => x.ForumId);
+                    table.ForeignKey(
+                        name: "FK_Forums_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Threads",
                 columns: table => new
                 {
-                    ThreadId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ForumId = table.Column<int>(nullable: false),
-                    Id = table.Column<string>(nullable: false),
+                    ThreadId = table.Column<Guid>(nullable: false),
+                    ForumId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
                     Subject = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -27,8 +45,8 @@ namespace Forum_Project.Migrations
                         principalColumn: "ForumId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Threads_AspNetUsers_Id",
-                        column: x => x.Id,
+                        name: "FK_Threads_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -38,12 +56,11 @@ namespace Forum_Project.Migrations
                 name: "Posts",
                 columns: table => new
                 {
-                    PostId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ThreadId = table.Column<int>(nullable: false),
-                    ParentIdFKPostId = table.Column<int>(nullable: false),
+                    PostId = table.Column<Guid>(nullable: false),
+                    ThreadId = table.Column<Guid>(nullable: false),
+                    ParentId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
                     Children = table.Column<int>(nullable: false, defaultValue: 0),
-                    Id = table.Column<string>(nullable: false),
                     Message = table.Column<string>(nullable: false),
                     PostedOn = table.Column<DateTime>(nullable: false)
                 },
@@ -51,14 +68,8 @@ namespace Forum_Project.Migrations
                 {
                     table.PrimaryKey("PK_Posts", x => x.PostId);
                     table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_Id",
-                        column: x => x.Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Posts_Posts_ParentIdFKPostId",
-                        column: x => x.ParentIdFKPostId,
+                        name: "FK_Posts_Posts_ParentId",
+                        column: x => x.ParentId,
                         principalTable: "Posts",
                         principalColumn: "PostId",
                         onDelete: ReferentialAction.Restrict);
@@ -68,6 +79,12 @@ namespace Forum_Project.Migrations
                         principalTable: "Threads",
                         principalColumn: "ThreadId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.UpdateData(
@@ -75,44 +92,44 @@ namespace Forum_Project.Migrations
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "33235ed3-78a3-47b6-9f80-500b32968b8f");
+                value: "d4ffdeba-8337-44eb-8772-13b4db0b3868");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "3363f3d0-df6e-4971-833f-45669d96c993");
+                value: "6f403957-4f3c-4c92-a837-a62f3ad0f21a");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_Id",
-                table: "Posts",
-                column: "Id",
-                unique: true);
+                name: "IX_Forums_UserId",
+                table: "Forums",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_ParentIdFKPostId",
+                name: "IX_Posts_ParentId",
                 table: "Posts",
-                column: "ParentIdFKPostId",
-                unique: true);
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ThreadId",
                 table: "Posts",
-                column: "ThreadId",
-                unique: true);
+                column: "ThreadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_UserId",
+                table: "Posts",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Threads_ForumId",
                 table: "Threads",
-                column: "ForumId",
-                unique: true);
+                column: "ForumId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Threads_Id",
+                name: "IX_Threads_UserId",
                 table: "Threads",
-                column: "Id",
-                unique: true);
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -123,19 +140,22 @@ namespace Forum_Project.Migrations
             migrationBuilder.DropTable(
                 name: "Threads");
 
+            migrationBuilder.DropTable(
+                name: "Forums");
+
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "53343a11-7146-49d5-a174-498c376ceb50");
+                value: "86a61673-8ea0-4280-b68a-60ed3926928c");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "65cdb603-29ab-458d-8cc0-1bea0b64d939");
+                value: "3fdebb80-34a1-4d2c-9954-9a0a97423c20");
         }
     }
 }

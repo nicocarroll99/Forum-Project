@@ -27,9 +27,23 @@ namespace Forum_Project.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddForum(Forums model)
+        public async Task<IActionResult> AddForum(Forums model)
         {
-            forumService.AddForum(model);
+            await forumService.AddForum(model);
+            return View();
+        }
+
+        // Need to test everything below this point: Database may be screwed up
+        [HttpGet]
+        public IActionResult AddThread()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddThread(int forumId, Threads model)
+        {
+            await forumService.AddThread(forumId, model);
             return View();
         }
     }

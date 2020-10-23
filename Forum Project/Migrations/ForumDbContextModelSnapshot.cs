@@ -89,89 +89,86 @@ namespace Forum_Project.Migrations
 
             modelBuilder.Entity("Forum_Project.Models.Forums", b =>
                 {
-                    b.Property<int>("ForumId")
+                    b.Property<Guid>("ForumId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ForumName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ForumId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Forums");
                 });
 
             modelBuilder.Entity("Forum_Project.Models.Posts", b =>
                 {
-                    b.Property<int>("PostId")
+                    b.Property<Guid>("PostId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Children")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ParentIdFKPostId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ParentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("PostedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ThreadId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ThreadId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasIndex("ParentId");
 
-                    b.HasIndex("ParentIdFKPostId")
-                        .IsUnique();
+                    b.HasIndex("ThreadId");
 
-                    b.HasIndex("ThreadId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Forum_Project.Models.Threads", b =>
                 {
-                    b.Property<int>("ThreadId")
+                    b.Property<Guid>("ThreadId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("ForumId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ForumId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ThreadId");
 
-                    b.HasIndex("ForumId")
-                        .IsUnique();
+                    b.HasIndex("ForumId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Threads");
                 });
@@ -206,14 +203,14 @@ namespace Forum_Project.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "33235ed3-78a3-47b6-9f80-500b32968b8f",
+                            ConcurrencyStamp = "d4ffdeba-8337-44eb-8772-13b4db0b3868",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "3363f3d0-df6e-4971-833f-45669d96c993",
+                            ConcurrencyStamp = "6f403957-4f3c-4c92-a837-a62f3ad0f21a",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -323,38 +320,47 @@ namespace Forum_Project.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Forum_Project.Models.Forums", b =>
+                {
+                    b.HasOne("Forum_Project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Forum_Project.Models.Posts", b =>
                 {
-                    b.HasOne("Forum_Project.Models.ApplicationUser", "UserIdFK")
-                        .WithOne()
-                        .HasForeignKey("Forum_Project.Models.Posts", "Id")
+                    b.HasOne("Forum_Project.Models.Posts", "Post")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Forum_Project.Models.Posts", "ParentIdFK")
-                        .WithOne()
-                        .HasForeignKey("Forum_Project.Models.Posts", "ParentIdFKPostId")
+                    b.HasOne("Forum_Project.Models.Threads", "Thread")
+                        .WithMany()
+                        .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Forum_Project.Models.Threads", "ThreadIdFK")
-                        .WithOne()
-                        .HasForeignKey("Forum_Project.Models.Posts", "ThreadId")
+                    b.HasOne("Forum_Project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Forum_Project.Models.Threads", b =>
                 {
-                    b.HasOne("Forum_Project.Models.Forums", "ForumIdFK")
-                        .WithOne()
-                        .HasForeignKey("Forum_Project.Models.Threads", "ForumId")
+                    b.HasOne("Forum_Project.Models.Forums", "Forum")
+                        .WithMany()
+                        .HasForeignKey("ForumId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Forum_Project.Models.ApplicationUser", "UserIdFK")
-                        .WithOne()
-                        .HasForeignKey("Forum_Project.Models.Threads", "Id")
+                    b.HasOne("Forum_Project.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

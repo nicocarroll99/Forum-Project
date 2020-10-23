@@ -13,21 +13,25 @@ namespace Forum_Project.Models
     {
         [Key]
         [Required]
-        public int PostId { get; set; }
+        public Guid PostId { get; set; }
 
         [Required]
         [ForeignKey("ThreadId")]
-        public Threads ThreadIdFK { get; set; }
+        public Threads Thread { get; set; }
+        public Guid ThreadId { get; set; }
 
         [Required]
-        public Posts ParentIdFK { get; set; }
+        [ForeignKey("ParentId")]
+        public Posts Post { get; set; }
+        public Guid ParentId { get; set; }
+
+        [Required]
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public int Children { get; set; }
-
-        [Required]
-        [ForeignKey("Id")]
-        public ApplicationUser UserIdFK { get; set; }
 
         [Required]
         public string Message { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Forum_Project.Context;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,17 @@ namespace Forum_Project.Models
     {
         [Key]
         [Required]
-        public int ThreadId { get; set; }
+        public Guid ThreadId { get; set; }
 
         [Required]
         [ForeignKey("ForumId")]
-        public Forums ForumIdFK { get; set; }
+        public Forums Forum { get; set; }
+        public Guid ForumId { get; set; }
 
         [Required]
-        [ForeignKey("Id")]
-        public ApplicationUser UserIdFK { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public string Subject { get; set; }
