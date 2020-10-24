@@ -13,6 +13,8 @@ namespace Forum_Project.Migrations
                 {
                     ForumId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
+                    AuthorName = table.Column<string>(nullable: false),
+                    postedOn = table.Column<DateTime>(nullable: false),
                     ForumName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -33,6 +35,8 @@ namespace Forum_Project.Migrations
                     ThreadId = table.Column<Guid>(nullable: false),
                     ForumId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
+                    PostedOn = table.Column<DateTime>(nullable: false),
+                    AuthorName = table.Column<string>(nullable: false),
                     Subject = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -57,9 +61,11 @@ namespace Forum_Project.Migrations
                 columns: table => new
                 {
                     PostId = table.Column<Guid>(nullable: false),
+                    ForumId = table.Column<Guid>(nullable: false),
                     ThreadId = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
+                    AuthorName = table.Column<string>(nullable: false),
                     Children = table.Column<int>(nullable: false, defaultValue: 0),
                     Message = table.Column<string>(nullable: false),
                     PostedOn = table.Column<DateTime>(nullable: false)
@@ -67,6 +73,12 @@ namespace Forum_Project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.PostId);
+                    table.ForeignKey(
+                        name: "FK_Posts_Forums_ForumId",
+                        column: x => x.ForumId,
+                        principalTable: "Forums",
+                        principalColumn: "ForumId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Posts_Posts_ParentId",
                         column: x => x.ParentId,
@@ -92,19 +104,24 @@ namespace Forum_Project.Migrations
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "d4ffdeba-8337-44eb-8772-13b4db0b3868");
+                value: "96c155a8-15c9-43b7-9ad7-37ec76db8e64");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "6f403957-4f3c-4c92-a837-a62f3ad0f21a");
+                value: "1f7a6593-04e7-4292-8d03-fc1603797400");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Forums_UserId",
                 table: "Forums",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_ForumId",
+                table: "Posts",
+                column: "ForumId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ParentId",

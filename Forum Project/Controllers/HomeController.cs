@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Forum_Project.Models;
+using Forum_Project.Services;
+using Forum_Project.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +17,22 @@ namespace Forum_Project.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ForumService forumService;
 
-        public HomeController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ILogger<HomeController> logger)
+        public HomeController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ForumService forumService, ILogger<HomeController> logger)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.forumService = forumService;
             _logger = logger;
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var forums = await forumService.GetForumsWithTheirThreads();
+            // Add model to index view and loop through forums
+            return View(forums);
         }
 
         public IActionResult Privacy()
@@ -53,6 +60,7 @@ namespace Forum_Project.Controllers
             if (!User.IsInRole("Admin"))
             {
                 await userManager.AddToRoleAsync(user, "Admin");
+                await userManager.RemoveFromRoleAsync(user, "User");
             }
             // If user is an admin, remove them from the admin role and add them to user incase they are not already one
             else
@@ -61,7 +69,7 @@ namespace Forum_Project.Controllers
                 await userManager.AddToRoleAsync(user, "User");
             }
 
-            return View("Index");
+            return RedirectToAction("Index");
         }
     }
 }

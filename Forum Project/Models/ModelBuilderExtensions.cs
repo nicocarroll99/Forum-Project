@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Forum_Project.Models
 {
@@ -37,25 +38,14 @@ namespace Forum_Project.Models
             modelBuilder.Entity<Posts>()
                 .Property(b => b.Children).HasDefaultValue(0);
 
-            //modelBuilder.Entity<Threads>()
-            //    .HasOne(e => e.ForumIdFK)
-            //    .WithOne();
-
-            //modelBuilder.Entity<Threads>()
-            //    .HasOne(e => e.UserIdFK)
-            //    .WithOne();
-
-            //modelBuilder.Entity<Posts>()
-            //    .HasOne(e => e.ThreadIdFK)
-            //    .WithOne();
-
-            //modelBuilder.Entity<Posts>()
-            //    .HasOne(e => e.ParentIdFK)
-            //    .WithOne();
-
-            //modelBuilder.Entity<Posts>()
-            //    .HasOne(e => e.UserIdFK)
-            //    .WithOne();
+            modelBuilder.Entity<Posts>(entity =>
+            {
+                entity.HasOne(x => x.Parent)
+                .WithMany(x => x.ChildrenPosts)
+                .HasForeignKey(x => x.ParentId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
                 
         }
     }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum_Project.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20201023194938_ForumMigration")]
+    [Migration("20201024044221_ForumMigration")]
     partial class ForumMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,6 +95,10 @@ namespace Forum_Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ForumName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -102,6 +106,9 @@ namespace Forum_Project.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("postedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("ForumId");
 
@@ -116,10 +123,17 @@ namespace Forum_Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Children")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
+
+                    b.Property<Guid>("ForumId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -140,6 +154,8 @@ namespace Forum_Project.Migrations
 
                     b.HasKey("PostId");
 
+                    b.HasIndex("ForumId");
+
                     b.HasIndex("ParentId");
 
                     b.HasIndex("ThreadId");
@@ -155,8 +171,15 @@ namespace Forum_Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ForumId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PostedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Subject")
                         .IsRequired()
@@ -205,14 +228,14 @@ namespace Forum_Project.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "d4ffdeba-8337-44eb-8772-13b4db0b3868",
+                            ConcurrencyStamp = "96c155a8-15c9-43b7-9ad7-37ec76db8e64",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "6f403957-4f3c-4c92-a837-a62f3ad0f21a",
+                            ConcurrencyStamp = "1f7a6593-04e7-4292-8d03-fc1603797400",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -333,11 +356,16 @@ namespace Forum_Project.Migrations
 
             modelBuilder.Entity("Forum_Project.Models.Posts", b =>
                 {
-                    b.HasOne("Forum_Project.Models.Posts", "Post")
+                    b.HasOne("Forum_Project.Models.Forums", "Forum")
                         .WithMany()
-                        .HasForeignKey("ParentId")
+                        .HasForeignKey("ForumId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Forum_Project.Models.Posts", "Parent")
+                        .WithMany("ChildrenPosts")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Forum_Project.Models.Threads", "Thread")
                         .WithMany()

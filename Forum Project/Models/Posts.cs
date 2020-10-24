@@ -16,19 +16,28 @@ namespace Forum_Project.Models
         public Guid PostId { get; set; }
 
         [Required]
+        [ForeignKey("ForumId")]
+        public Forums Forum { get; set; }
+        public Guid ForumId { get; set; }
+
+        [Required]
         [ForeignKey("ThreadId")]
         public Threads Thread { get; set; }
         public Guid ThreadId { get; set; }
 
         [Required]
         [ForeignKey("ParentId")]
-        public Posts Post { get; set; }
+        public Posts Parent { get; set; }
         public Guid ParentId { get; set; }
+        public ICollection<Posts> ChildrenPosts { get; } = new List<Posts>();
 
         [Required]
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
         public string UserId { get; set; }
+
+        [Required]
+        public string AuthorName { get; set; }
 
         [Required]
         public int Children { get; set; }

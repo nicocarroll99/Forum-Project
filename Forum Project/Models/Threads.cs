@@ -27,6 +27,15 @@ namespace Forum_Project.Models
         public string UserId { get; set; }
 
         [Required]
+        public DateTime PostedOn { get; set; }
+
+        [Required]
+        public string AuthorName { get; set; }
+
+        [Required]
+        public string ThreadTitle { get; set; }
+
+        [Required]
         public string Subject { get; set; }
     }
 }

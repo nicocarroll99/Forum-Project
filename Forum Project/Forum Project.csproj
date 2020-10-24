@@ -51,6 +51,34 @@
     <Compile Remove="Migrations\20201023191858_fix.Designer.cs" />
     <Compile Remove="Migrations\20201023194536_fix2.cs" />
     <Compile Remove="Migrations\20201023194536_fix2.Designer.cs" />
+    <Compile Remove="Migrations\20201023194938_ForumMigration.cs" />
+    <Compile Remove="Migrations\20201023194938_ForumMigration.Designer.cs" />
+    <Compile Remove="Migrations\20201023225505_Add_ForumId_and_AuthorName.cs" />
+    <Compile Remove="Migrations\20201023225505_Add_ForumId_and_AuthorName.Designer.cs" />
+    <Compile Remove="Migrations\20201023225634_ForumMigrationV2.cs" />
+    <Compile Remove="Migrations\20201023225634_ForumMigrationV2.Designer.cs" />
+    <Compile Remove="Migrations\20201024011606_AddPostChildrenList.cs" />
+    <Compile Remove="Migrations\20201024011606_AddPostChildrenList.Designer.cs" />
+    <Compile Remove="Migrations\20201024012125_PostsUpdate.cs" />
+    <Compile Remove="Migrations\20201024012125_PostsUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20201024013247_ChangeRequiredOnForum.cs" />
+    <Compile Remove="Migrations\20201024013247_ChangeRequiredOnForum.Designer.cs" />
+    <Compile Remove="Migrations\20201024020131_ForumDatabaseV3.cs" />
+    <Compile Remove="Migrations\20201024020131_ForumDatabaseV3.Designer.cs" />
+    <Compile Remove="Migrations\20201024020319_ForumMigrationV3.cs" />
+    <Compile Remove="Migrations\20201024020319_ForumMigrationV3.Designer.cs" />
+    <Compile Remove="Migrations\20201024020521_ForumMigrationV3.cs" />
+    <Compile Remove="Migrations\20201024020521_ForumMigrationV3.Designer.cs" />
+    <Compile Remove="Migrations\20201024041552_Forum.cs" />
+    <Compile Remove="Migrations\20201024041552_Forum.Designer.cs" />
+    <Compile Remove="Migrations\20201024042629_ForumMigrationV2.cs" />
+    <Compile Remove="Migrations\20201024042629_ForumMigrationV2.Designer.cs" />
+    <Compile Remove="Migrations\20201024042734_ForumMigration.cs" />
+    <Compile Remove="Migrations\20201024042734_ForumMigration.Designer.cs" />
+    <Compile Remove="Migrations\20201024042753_d.cs" />
+    <Compile Remove="Migrations\20201024042753_d.Designer.cs" />
+    <Compile Remove="Migrations\20201024044120_ForumMigrationV2.cs" />
+    <Compile Remove="Migrations\20201024044120_ForumMigrationV2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

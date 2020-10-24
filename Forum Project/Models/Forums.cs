@@ -13,10 +13,17 @@ namespace Forum_Project.Models
         [Required]
         public Guid ForumId { get; set; }
 
-        [Required]
+        
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
+        [Required]
         public string UserId { get; set; }
+
+        [Required]
+        public string AuthorName { get; set; }
+
+        [Required]
+        public DateTime postedOn { get; set; }
 
         [Required]
         public string ForumName { get; set; }
