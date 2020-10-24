@@ -9,12 +9,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Forum_Project.Models
 {
     public static class ModelBuilderExtensions
     {
-        public static void Seed(this ModelBuilder modelBuilder)
+        public static void SeedUsers(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole
@@ -29,6 +30,33 @@ namespace Forum_Project.Models
                     Name = "User",
                     NormalizedName = "USER"
                 });
+        }
+
+        public static void BuildForumDB(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Posts>()
+                .Property(b => b.Children).HasDefaultValue(0);
+
+            //modelBuilder.Entity<Threads>()
+            //    .HasOne(e => e.ForumIdFK)
+            //    .WithOne();
+
+            //modelBuilder.Entity<Threads>()
+            //    .HasOne(e => e.UserIdFK)
+            //    .WithOne();
+
+            //modelBuilder.Entity<Posts>()
+            //    .HasOne(e => e.ThreadIdFK)
+            //    .WithOne();
+
+            //modelBuilder.Entity<Posts>()
+            //    .HasOne(e => e.ParentIdFK)
+            //    .WithOne();
+
+            //modelBuilder.Entity<Posts>()
+            //    .HasOne(e => e.UserIdFK)
+            //    .WithOne();
+                
         }
     }
 }

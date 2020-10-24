@@ -16,10 +16,15 @@ namespace Forum_Project.Context
             
         }
 
+        public DbSet<Forums> Forums { get; set; }
+        public DbSet<Threads> Threads { get; set; }
+        public DbSet<Posts> Posts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Seed();
+            builder.SeedUsers();
+            builder.BuildForumDB();
 
             foreach(var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

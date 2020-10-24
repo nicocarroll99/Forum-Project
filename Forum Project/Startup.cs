@@ -1,6 +1,7 @@
 using Forum_Project.Context;
 using Forum_Project.Models;
 using Forum_Project.Security;
+using Forum_Project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -91,6 +92,9 @@ namespace Forum_Project
                 options.SignIn.RequireConfirmedEmail = true;
 
                 options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             })
             .AddEntityFrameworkStores<ForumDbContext>()
             .AddDefaultTokenProviders()
@@ -103,6 +107,7 @@ namespace Forum_Project
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
             services.AddSingleton<DataProtectionPurposeStrings>();
+            services.AddScoped<ForumService, ForumService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
