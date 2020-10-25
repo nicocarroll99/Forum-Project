@@ -11,7 +11,8 @@ namespace Forum_Project.Models
     {
         [Key]
         [Required]
-        public Guid ForumId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string ForumId { get; set; }
 
         
         [ForeignKey("UserId")]

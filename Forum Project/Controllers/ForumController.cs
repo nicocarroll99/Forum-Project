@@ -63,5 +63,41 @@ namespace Forum_Project.Controllers
             await forumService.AddThread(model);
             return View();
         }
+
+        [HttpGet]
+        public IActionResult AddPost(string threadId, string forumId)
+        {
+            PostViewModel postViewModel = new PostViewModel
+            {
+                ThreadId = threadId,
+                ForumId = forumId
+            };
+
+            return View(postViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPost(PostViewModel model)
+        {
+            var user = await userManager.GetUserAsync(User);
+            model.UserId = user.Id;
+            model.AuthorName = user.UserName;
+
+            await forumService.AddPost(model);
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ThreadPosts(string threadId)
+        {
+            var posts = forumService.GetThreadPosts(threadId);
+
+            ThreadViewModel threadViewModel = new ThreadViewModel
+            {
+                Posts = posts
+            };
+
+            return View(threadViewModel);
+        }
     }
 }

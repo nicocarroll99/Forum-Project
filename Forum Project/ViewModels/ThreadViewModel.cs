@@ -16,6 +16,6 @@ namespace Forum_Project.ViewModels
         public string UserId { get; set; }
         public DateTime PostedOn { get; set; }
         public string Subject { get; set; }
-        public List<PostViewModel> Posts { get; set; }
+        public List<TreeExtensions.ITree<Posts>> Posts { get; set; }
     }
 }

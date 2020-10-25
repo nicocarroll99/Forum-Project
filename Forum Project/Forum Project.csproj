@@ -79,12 +79,17 @@
     <Compile Remove="Migrations\20201024042753_d.Designer.cs" />
     <Compile Remove="Migrations\20201024044120_ForumMigrationV2.cs" />
     <Compile Remove="Migrations\20201024044120_ForumMigrationV2.Designer.cs" />
+    <Compile Remove="Migrations\20201024044221_ForumMigration.cs" />
+    <Compile Remove="Migrations\20201024044221_ForumMigration.Designer.cs" />
+    <Compile Remove="Migrations\20201024045532_ForumMigrationV2.cs" />
+    <Compile Remove="Migrations\20201024045532_ForumMigrationV2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="4.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">

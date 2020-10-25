@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Forum_Project.Migrations
 {
-    public partial class ForumMigration : Migration
+    public partial class ForumMigrationV1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,7 @@ namespace Forum_Project.Migrations
                 name: "Forums",
                 columns: table => new
                 {
-                    ForumId = table.Column<Guid>(nullable: false),
+                    ForumId = table.Column<string>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
                     AuthorName = table.Column<string>(nullable: false),
                     postedOn = table.Column<DateTime>(nullable: false),
@@ -32,11 +32,12 @@ namespace Forum_Project.Migrations
                 name: "Threads",
                 columns: table => new
                 {
-                    ThreadId = table.Column<Guid>(nullable: false),
-                    ForumId = table.Column<Guid>(nullable: false),
+                    ThreadId = table.Column<string>(nullable: false),
+                    ForumId = table.Column<string>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
                     PostedOn = table.Column<DateTime>(nullable: false),
                     AuthorName = table.Column<string>(nullable: false),
+                    ThreadTitle = table.Column<string>(nullable: false),
                     Subject = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -60,10 +61,10 @@ namespace Forum_Project.Migrations
                 name: "Posts",
                 columns: table => new
                 {
-                    PostId = table.Column<Guid>(nullable: false),
-                    ForumId = table.Column<Guid>(nullable: false),
-                    ThreadId = table.Column<Guid>(nullable: false),
-                    ParentId = table.Column<Guid>(nullable: false),
+                    PostId = table.Column<string>(nullable: false),
+                    ForumId = table.Column<string>(nullable: false),
+                    ThreadId = table.Column<string>(nullable: true),
+                    ParentId = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false),
                     AuthorName = table.Column<string>(nullable: false),
                     Children = table.Column<int>(nullable: false, defaultValue: 0),
@@ -104,14 +105,14 @@ namespace Forum_Project.Migrations
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "96c155a8-15c9-43b7-9ad7-37ec76db8e64");
+                value: "8469b144-9b44-4ee4-a203-343ddde4985d");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "1f7a6593-04e7-4292-8d03-fc1603797400");
+                value: "b14d5957-9c28-4295-948c-78e6ae7fa5ea");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Forums_UserId",

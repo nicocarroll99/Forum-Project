@@ -6,46 +6,36 @@ namespace Forum_Project.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ThreadTitle",
-                table: "Threads",
-                nullable: false,
-                defaultValue: "");
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "8cdef650-9513-4563-a573-a5648be488b6");
+                value: "024901e6-f019-43bb-99e8-c0ecb2aadb2f");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "58c7703f-7363-44b1-8aca-05589bad14cd");
+                value: "a52528cb-2edc-4e6c-aad4-54b49bf624fe");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ThreadTitle",
-                table: "Threads");
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "1",
                 column: "ConcurrencyStamp",
-                value: "96c155a8-15c9-43b7-9ad7-37ec76db8e64");
+                value: "8469b144-9b44-4ee4-a203-343ddde4985d");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "2",
                 column: "ConcurrencyStamp",
-                value: "1f7a6593-04e7-4292-8d03-fc1603797400");
+                value: "b14d5957-9c28-4295-948c-78e6ae7fa5ea");
         }
     }
 }

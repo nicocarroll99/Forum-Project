@@ -5,6 +5,7 @@ using Forum_Project.ViewModels;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -38,7 +39,7 @@ namespace Forum_Project.Services
         {
             var newThread = new Threads
             {
-                ForumId = Guid.Parse(model.ForumId),
+                ForumId = model.ForumId,
                 ThreadTitle = model.ThreadTitle,
                 AuthorName = model.AuthorName,
                 PostedOn = DateTime.Now,
@@ -50,14 +51,12 @@ namespace Forum_Project.Services
             await forumDbContext.SaveChangesAsync();
         }
 
-        public async Task AddPost(string threadId, Posts model)
+        public async Task AddPost(PostViewModel model)
         {
-
             var newPost = new Posts
             {
-                ThreadId = Guid.Parse(threadId),
+                ThreadId = model.ThreadId,
                 Message = model.Message,
-                Parent = model.Parent,
                 AuthorName = model.AuthorName,
                 ForumId = model.ForumId,
                 ParentId = model.ParentId,
@@ -66,6 +65,7 @@ namespace Forum_Project.Services
                 Children = 0
             };
 
+            // Find the parent post and increment the child count
             if (model.ParentId != null)
             {
                 var parentPost = forumDbContext.Posts
@@ -88,11 +88,11 @@ namespace Forum_Project.Services
             {
                 ForumViewModel forumViewModel = new ForumViewModel
                 {
-                    ForumId = forum.ForumId.ToString(),
+                    ForumId = forum.ForumId,
                     ForumName = forum.ForumName,
                     AuthorName = forum.AuthorName,
                     PostedOn = DateTime.Now,
-                    UserId = forum.UserId.ToString()
+                    UserId = forum.UserId
                 };
 
                 forumViewModels.Add(forumViewModel);
@@ -113,19 +113,19 @@ namespace Forum_Project.Services
             List<ThreadViewModel> threadViewModels = new List<ThreadViewModel>();
 
             var q = await forumDbContext.Threads
-                .Where(t => t.ForumId.ToString() == forumId)
+                .Where(t => t.ForumId == forumId)
                 .ToListAsync();
 
             foreach(var thread in q)
             {
                 ThreadViewModel threadViewModel = new ThreadViewModel
                 {
-                    ThreadId = thread.ThreadId.ToString(),
+                    ThreadId = thread.ThreadId,
                     ThreadTitle = thread.ThreadTitle,
-                    ForumId = thread.ForumId.ToString(),
+                    ForumId = thread.ForumId,
                     Subject = thread.Subject,
                     AuthorName = thread.AuthorName,
-                    UserId = thread.UserId.ToString()
+                    UserId = thread.UserId
                 };
 
                 threadViewModels.Add(threadViewModel);
@@ -148,12 +148,14 @@ namespace Forum_Project.Services
             return forumViewModels;
         }
 
-        public void GetThreadPosts(string threadId)
+        public List<TreeExtensions.ITree<Posts>> GetThreadPosts(string threadId)
         {
-            List<Posts> all = forumDbContext.Posts.Include(x => x.Parent).ToList();
+            List<Posts> all = forumDbContext.Posts.Include(x => x.Parent).Where(p => p.ThreadId == threadId).ToList();
             TreeExtensions.ITree<Posts> virtualRootNode = all.ToTree((parent, child) => child.ParentId == parent.PostId);
             List<TreeExtensions.ITree<Posts>> rootLevelPostsWithSubTree = virtualRootNode.Children.ToList();
             List<TreeExtensions.ITree<Posts>> flattenedListOfPostNodes = virtualRootNode.Children.Flatten(node => node.Children).ToList();
+
+            return rootLevelPostsWithSubTree;
         }
 
 

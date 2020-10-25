@@ -13,22 +13,23 @@ namespace Forum_Project.Models
     {
         [Key]
         [Required]
-        public Guid PostId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string PostId { get; set; }
 
         [Required]
         [ForeignKey("ForumId")]
         public Forums Forum { get; set; }
-        public Guid ForumId { get; set; }
+        public string ForumId { get; set; }
 
         [Required]
         [ForeignKey("ThreadId")]
         public Threads Thread { get; set; }
-        public Guid ThreadId { get; set; }
+        public string ThreadId { get; set; }
 
         [Required]
         [ForeignKey("ParentId")]
         public Posts Parent { get; set; }
-        public Guid ParentId { get; set; }
+        public string ParentId { get; set; }
         public ICollection<Posts> ChildrenPosts { get; } = new List<Posts>();
 
         [Required]

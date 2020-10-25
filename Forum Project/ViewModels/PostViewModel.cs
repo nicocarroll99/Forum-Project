@@ -10,8 +10,10 @@ namespace Forum_Project.ViewModels
     {
         public string PostId { get; set; }
         public string ThreadId { get; set; }
+        public string ForumId { get; set; }
         public string ParentId { get; set; }
         public string UserId { get; set; }
+        public string AuthorName { get; set; }
         public int ChildrenCount { get; set; }
         public string Message { get; set; }
         public DateTime postedOn { get; set; }

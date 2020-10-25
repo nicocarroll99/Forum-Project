@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum_Project.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    [Migration("20201024045532_ForumMigrationV2")]
+    [Migration("20201025035146_ForumMigrationV2")]
     partial class ForumMigrationV2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,9 +91,9 @@ namespace Forum_Project.Migrations
 
             modelBuilder.Entity("Forum_Project.Models.Forums", b =>
                 {
-                    b.Property<Guid>("ForumId")
+                    b.Property<string>("ForumId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
@@ -119,9 +119,9 @@ namespace Forum_Project.Migrations
 
             modelBuilder.Entity("Forum_Project.Models.Posts", b =>
                 {
-                    b.Property<Guid>("PostId")
+                    b.Property<string>("PostId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
@@ -132,21 +132,22 @@ namespace Forum_Project.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<Guid>("ForumId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ForumId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ParentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PostedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ThreadId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ThreadId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -167,16 +168,17 @@ namespace Forum_Project.Migrations
 
             modelBuilder.Entity("Forum_Project.Models.Threads", b =>
                 {
-                    b.Property<Guid>("ThreadId")
+                    b.Property<string>("ThreadId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ForumId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ForumId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PostedOn")
                         .HasColumnType("datetime2");
@@ -232,14 +234,14 @@ namespace Forum_Project.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "8cdef650-9513-4563-a573-a5648be488b6",
+                            ConcurrencyStamp = "024901e6-f019-43bb-99e8-c0ecb2aadb2f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "58c7703f-7363-44b1-8aca-05589bad14cd",
+                            ConcurrencyStamp = "a52528cb-2edc-4e6c-aad4-54b49bf624fe",
                             Name = "User",
                             NormalizedName = "USER"
                         });

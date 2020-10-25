@@ -14,12 +14,13 @@ namespace Forum_Project.Models
     {
         [Key]
         [Required]
-        public Guid ThreadId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string ThreadId { get; set; }
 
         [Required]
         [ForeignKey("ForumId")]
         public Forums Forum { get; set; }
-        public Guid ForumId { get; set; }
+        public string ForumId { get; set; }
 
         [Required]
         [ForeignKey("UserId")]

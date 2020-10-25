@@ -1,0 +1,18 @@
+﻿@model Forum_Project.ViewModels.ThreadViewModel
+
+
+
+<script type="text/javascript">
+
+    var posts = @Html.Raw(Json.Serialize(Model.Posts));
+
+    var stop = @Model.ThreadId;
+
+    displayPosts(posts);
+
+    function displayPosts(postArray) {
+       
+
+    }
+
+</script>
