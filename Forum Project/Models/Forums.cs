@@ -24,7 +24,7 @@ namespace Forum_Project.Models
         public string AuthorName { get; set; }
 
         [Required]
-        public DateTime postedOn { get; set; }
+        public DateTime PostedOn { get; set; }
 
         [Required]
         public string ForumName { get; set; }

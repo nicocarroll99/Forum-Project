@@ -101,6 +101,24 @@ namespace Forum_Project.Services
             return forumViewModels;
         }
 
+        public ThreadViewModel GetThread(string threadID)
+        {
+            var q = forumDbContext.Threads.Where(t => t.ThreadId == threadID).FirstOrDefault();
+
+            ThreadViewModel threadViewModel = new ThreadViewModel()
+            {
+                ThreadId = q.ThreadId,
+                ForumId = q.ForumId,
+                AuthorName = q.AuthorName,
+                PostedOn = q.PostedOn,
+                Subject = q.Subject,
+                ThreadTitle = q.ThreadTitle,
+                UserId = q.UserId
+            };
+
+            return threadViewModel;
+        }
+
         //public async Task<List<Threads>> GetUserThreads(string userId)
         //{
         //    var q = await forumDbContext.Threads.Where(t => t.UserId == userId).ToListAsync();

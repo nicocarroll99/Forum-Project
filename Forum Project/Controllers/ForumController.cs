@@ -90,14 +90,12 @@ namespace Forum_Project.Controllers
         [HttpGet]
         public IActionResult ThreadPosts(string threadId)
         {
+            var thread = forumService.GetThread(threadId);
             var posts = forumService.GetThreadPosts(threadId);
 
-            ThreadViewModel threadViewModel = new ThreadViewModel
-            {
-                Posts = posts
-            };
+            thread.Posts = posts;
 
-            return View(threadViewModel);
+            return View(thread);
         }
     }
 }
