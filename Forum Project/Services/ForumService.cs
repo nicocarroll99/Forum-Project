@@ -101,12 +101,12 @@ namespace Forum_Project.Services
             return forumViewModels;
         }
 
-        //public async Task<List<Threads>> GetUserThreads(string userId)
-        //{
-        //    var q = await forumDbContext.Threads.Where(t => t.UserId == userId).ToListAsync();
+        public async Task<List<Threads>> GetUserThreads(string userId)
+        {
+            var q = await forumDbContext.Threads.Where(t => t.UserId == userId).ToListAsync();
 
-        //    return q;
-        //}
+            return q;
+        }
 
         public async Task<List<ThreadViewModel>> GetForumThreads(string forumId)
         {
