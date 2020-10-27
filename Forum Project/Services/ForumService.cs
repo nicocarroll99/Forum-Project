@@ -101,6 +101,22 @@ namespace Forum_Project.Services
             return forumViewModels;
         }
 
+        public ForumViewModel GetForum(string forumId)
+        {
+            var q = forumDbContext.Forums.Where(f => f.ForumId == forumId).FirstOrDefault();
+
+            ForumViewModel forumViewModel = new ForumViewModel
+            {
+                ForumId = q.ForumId,
+                AuthorName = q.AuthorName,
+                ForumName = q.ForumName,
+                PostedOn = q.PostedOn,
+                UserId = q.UserId
+            };
+
+            return forumViewModel;
+        }
+
         public ThreadViewModel GetThread(string threadID)
         {
             var q = forumDbContext.Threads.Where(t => t.ThreadId == threadID).FirstOrDefault();
@@ -115,6 +131,10 @@ namespace Forum_Project.Services
                 ThreadTitle = q.ThreadTitle,
                 UserId = q.UserId
             };
+
+            var forum = GetForum(threadViewModel.ForumId);
+
+            threadViewModel.ForumName = forum.ForumName;
 
             return threadViewModel;
         }

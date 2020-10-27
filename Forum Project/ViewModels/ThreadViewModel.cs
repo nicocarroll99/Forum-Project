@@ -12,6 +12,7 @@ namespace Forum_Project.ViewModels
         public string ThreadId { get; set; }
         public string ThreadTitle { get; set; }
         public string ForumId { get; set; }
+        public string ForumName { get; set; }
         public string AuthorName { get; set; }
         public string UserId { get; set; }
         public DateTime PostedOn { get; set; }

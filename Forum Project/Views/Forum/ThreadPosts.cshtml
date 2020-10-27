@@ -1,16 +1,21 @@
 ﻿@model Forum_Project.ViewModels.ThreadViewModel
 
+@inject UserManager<ApplicationUser> userManager
 
 <head>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <link rel="stylesheet" href="~/css/home-styles.css" />
+    <script src="https://kit.fontawesome.com/a0b2b89e79.js" crossorigin="anonymous"></script>
 </head>
 
-<div class="container my-3">
+<div class="container mb-0">
     <div class="row">
         <div class="col-12">
             <div class="category mb-0 p-4 rounded-top text-light">
                 <h2 class="h4">
-                    @Model.ThreadTitle
+                    @Model.ForumName
+                    <a class="btn btn-primary float-right" asp-action="AddPost" asp-controller="Forum" asp-route-forumId="@Model.ThreadId">Add Post</a>
                 </h2>
             </div>
         </div>
@@ -21,66 +26,92 @@
             <thead class="thead-light">
                 <tr>
                     <th scope="col" class="forum-col">Thread</th>
-                    <th scope="col" class="last-post-col">Details</th>
+                    <th scope="col">Details</th>
                 </tr>
-            </thead>
             <tbody>
                 <tr>
                     <td>
                         <p class="mb-0">@Model.Subject</p>
                     </td>
-                    <td>
+                    <td width="200">
                         <div>by <a href="#">@Model.AuthorName</a></div>
                         <div>@Model.PostedOn</div>
                     </td>
                 </tr>
             </tbody>
         </table>
-
     </div>
 </div>
-@{
 
-    async Task DisplayPosts(TreeExtensions.ITree<Posts> post, string indent, Boolean last)
-    {
-
-        <td colspan="12">
-
-            <div class="card card-body">
-                @post.Data.Message
-            </div>
-
-            @for (int i = 0; i < post.Children.Count; i++)
+<div class="table-responsive mb-0">
+    <table class="table" style="border-collapse: collapse">
+        @{
+            for (int i = 0; i < Model.Posts.Count; i++)
             {
-                <table class="table" style="border-collapse: collapse">
-                    <tbody>
-                        <tr>
-                            @{await DisplayPosts(post.Children.ToList()[i], indent, 0 == post.Children.Count);}
-                        </tr>
-                    </tbody>
-                </table>
-
+                <tbody style="border:none">
+                    @{await DisplayPosts(Model.Posts[i]);}
+                </tbody>
             }
-        </td>
+        }
+    </table>
+</div>
+
+@{
+    async Task DisplayPosts(TreeExtensions.ITree<Posts> post)
+    {
+        <tr class="post">
+            <td style="border:none; padding-bottom: 0; padding-right:0">
+                <div class="card card-body">
+                    <text class="float-right" style="font-size: 12px">
+                        Posted by @post.Data.AuthorName
+                    </text>
+                    <h7>
+                        @post.Data.Message
+                        @if (userManager.GetUserId(User) == post.Data.UserId)
+                        {
+                            <i class="fas fa-trash-alt float-right" style="margin: 5px"></i>
+                            <i class="fas fa-edit float-right" style="margin: 5px"></i>
+                        }
+
+                        <i class="fas fa-reply float-right" style="margin: 5px"></i>
+
+
+                    </h7>
+                </div>
+
+                @if (post.Children.Count > 0)
+                {
+                    <a class="header" href="#">View Replies</a>
+                }
+
+                @for (int i = 0; i < post.Children.Count; i++)
+                {
+                    <div class="table-responsive collapse">
+                        <table class="table mb-0" style="border-collapse: collapse">
+                            <tbody>
+                                @{await DisplayPosts(post.Children.ToList()[i]);}
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </td>
+        </tr>
     }
 }
 
-<table class="table" style="border-collapse: collapse">
 
-    @{
-        for (int i = 0; i < Model.Posts.Count; i++)
-        {
-            <tbody>
-                <tr>
-                    @{await DisplayPosts(Model.Posts[i], "", false);}
-                </tr>
-            </tbody>
-        }
-    }
-
-</table>
 <script type="text/javascript">
 
+    $('.header').click(function (e) {
+        // Prevent jumping to top of screen when clicking on anchor element
+        e.preventDefault();
+        // Toggle the text depending on what it currently says
+        jQuery(this).text($(this).text() == 'View Replies' ? 'Hide Replies' : 'View Replies');
 
+        // Find all sibling elements with the specified class
+        var element = jQuery(this).nextAll('.table-responsive');
+        // Toggle their class collapse
+        element.toggle(400);
+    }); 
 
 </script>

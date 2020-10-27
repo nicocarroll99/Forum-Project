@@ -36,6 +36,7 @@ namespace Forum_Project
                 options.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
 
+            // Enable exteranl authentication using Google
             services.AddAuthentication()
                 .AddGoogle(options => 
                 {
@@ -104,6 +105,8 @@ namespace Forum_Project
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();

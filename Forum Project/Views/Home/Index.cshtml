@@ -70,10 +70,8 @@
                                     <tr>
                                         <td>
                                             <h3 class="h5 mb-0">
-                                                <a>@Html.ActionLink(Model[i].Threads[j].ThreadTitle, "AddPost", "Forum", new { threadId = Model[i].Threads[j].ThreadId, 
-                                                   forumId =  Model[i].Threads[j].ForumId})</a>
+                                                <a>@Html.ActionLink(Model[i].Threads[j].ThreadTitle, "ThreadPosts", "Forum", new { threadId = Model[i].Threads[j].ThreadId })</a>
                                             </h3>
-                                            <a class="btn btn-primary">@Html.ActionLink(Model[i].Threads[j].ThreadTitle, "ThreadPosts", "Forum", new { threadId = Model[i].Threads[j].ThreadId})</a>
                                             <p class="mb-0">@Model[i].Threads[j].Subject</p>
                                         </td>
                                         <td>
