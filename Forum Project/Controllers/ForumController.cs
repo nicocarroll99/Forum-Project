@@ -34,11 +34,21 @@ namespace Forum_Project.Controllers
         [HttpPost]
         public async Task<IActionResult> AddForum(ForumViewModel model)
         {
-            var user = await userManager.GetUserAsync(User);
-            model.UserId = user.Id;
-            model.AuthorName = user.UserName;
+            try
+            {
+                var user = await userManager.GetUserAsync(User);
+                model.UserId = user.Id;
+                model.AuthorName = user.UserName;
 
-            await forumService.AddForum(model);
+                await forumService.AddForum(model);
+            }
+            catch
+            {
+                ViewBag.ErrorTitle = "Adding Forum Error";
+                ViewBag.ErrorMessage = "There was an issue adding your Forum. Please contact us for support.";
+                return View("Error");
+            }
+
             return View();
         }
 
@@ -56,11 +66,21 @@ namespace Forum_Project.Controllers
         [HttpPost]
         public async Task<IActionResult> AddThread(ThreadViewModel model)
         {
-            var user = await userManager.GetUserAsync(User);
-            model.UserId = user.Id;
-            model.AuthorName = user.UserName;
+            try
+            {
+                var user = await userManager.GetUserAsync(User);
+                model.UserId = user.Id;
+                model.AuthorName = user.UserName;
 
-            await forumService.AddThread(model);
+                await forumService.AddThread(model);
+            }
+            catch
+            {
+                ViewBag.ErrorTitle = "Adding Thread Error";
+                ViewBag.ErrorMessage = "There was an issue adding your thread. Please contact us for support.";
+                return View("Error");
+            }
+
             return View();
         }
 
@@ -79,12 +99,78 @@ namespace Forum_Project.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost(PostViewModel model)
         {
-            var user = await userManager.GetUserAsync(User);
-            model.UserId = user.Id;
-            model.AuthorName = user.UserName;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await userManager.GetUserAsync(User);
+                    model.UserId = user.Id;
+                    model.AuthorName = user.UserName;
 
-            await forumService.AddPost(model);
-            return View();
+                    await forumService.AddPost(model);
+                }
+                catch
+                {
+                    ViewBag.ErrorTitle = "Adding Post Error";
+                    ViewBag.ErrorMessage = "There was an issue adding your post. Please contact us for support.";
+                    return View("Error");
+                }
+            }
+
+            return RedirectToAction("ThreadPosts", new { threadId = model.ThreadId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(PostViewModel model)
+        {
+            try
+            {
+                var post = forumService.GetPost(model.PostId).Result;
+                // Check on server side if the user is the owner of the post
+                if(userManager.GetUserId(User) == post.UserId)
+                {
+                    await forumService.DeletePost(post);
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch
+            {
+                ViewBag.ErrorTitle = "Deleting Error";
+                ViewBag.ErrorMessage = "There was an issue deleting your post. Please contact us for support.";
+                return View("Error");
+            }
+
+            return RedirectToAction("ThreadPosts", new { threadId = model.ThreadId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPost(PostViewModel model)
+        {
+            try
+            {
+                var post = forumService.GetPost(model.PostId).Result;
+
+                if (userManager.GetUserId(User) == post.UserId)
+                {
+                    post.Message = model.Message;
+
+                    await forumService.EditPost(post);
+                }
+                else
+                {
+                    throw new Exception();
+                }  
+            }
+            catch
+            {
+                ViewBag.ErrorTitle = "Editing Error";
+                ViewBag.ErrorMessage = "There was an issue editing your post. Please contact us for support.";
+                return View("Error");
+            }
+            return RedirectToAction("ThreadPosts", new { threadId = model.ThreadId });
         }
 
         [HttpGet]

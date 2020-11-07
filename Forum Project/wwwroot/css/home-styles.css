@@ -10,3 +10,7 @@
 .last-post-col{
     min-width: 192px;
 }
+
+.hide-post{
+    display: none;
+}

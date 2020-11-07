@@ -78,13 +78,19 @@ namespace Forum_Project.Services
             await forumDbContext.SaveChangesAsync();
         }
 
+        public async Task EditPost(Posts post)
+        {
+            forumDbContext.Update(post);
+            await forumDbContext.SaveChangesAsync();
+        }
+
         public async Task<List<ForumViewModel>> GetForums()
         {
             List<ForumViewModel> forumViewModels = new List<ForumViewModel>();
 
             var q = await forumDbContext.Forums.ToListAsync();
 
-            foreach(var forum in q)
+            foreach (var forum in q)
             {
                 ForumViewModel forumViewModel = new ForumViewModel
                 {
@@ -139,6 +145,13 @@ namespace Forum_Project.Services
             return threadViewModel;
         }
 
+        public async Task<Posts> GetPost(string postId)
+        {
+            var q = await forumDbContext.Posts.Where(p => p.PostId == postId).FirstOrDefaultAsync();
+
+            return q;
+        }
+
         public async Task<List<Threads>> GetUserThreads(string userId)
         {
             var q = await forumDbContext.Threads.Where(t => t.UserId == userId).ToListAsync();
@@ -154,7 +167,7 @@ namespace Forum_Project.Services
                 .Where(t => t.ForumId == forumId)
                 .ToListAsync();
 
-            foreach(var thread in q)
+            foreach (var thread in q)
             {
                 ThreadViewModel threadViewModel = new ThreadViewModel
                 {
@@ -178,7 +191,7 @@ namespace Forum_Project.Services
 
             forumViewModels = await GetForums();
 
-            foreach(var forum in forumViewModels)
+            foreach (var forum in forumViewModels)
             {
                 forum.Threads = await GetForumThreads(forum.ForumId);
             }
@@ -196,6 +209,62 @@ namespace Forum_Project.Services
             return rootLevelPostsWithSubTree;
         }
 
+        public async Task DeletePost(Posts post)
+        {
+            var target = forumDbContext.Posts
+            .Include(x => x.ChildrenPosts)
+            .FirstOrDefault(x => x.ParentId == post.PostId);
 
+            if (target != null)
+            {
+                RecursiveDelete(target);
+            }
+
+            forumDbContext.Remove(post);
+            await forumDbContext.SaveChangesAsync();
+        }
+        private void RecursiveDelete(Posts parent)
+        {
+            if (parent.ChildrenPosts != null)
+            {
+                var children = forumDbContext.Posts
+                    .Include(x => x.ChildrenPosts)
+                    .Where(x => x.ParentId == parent.PostId);
+
+                foreach (var child in children)
+                {
+                    RecursiveDelete(child);
+                }
+            }
+
+            forumDbContext.Remove(parent);
+        }
+
+        public string RelativeDate(DateTime theDate)
+        {
+            Dictionary<long, string> thresholds = new Dictionary<long, string>();
+            int minute = 60;
+            int hour = 60 * minute;
+            int day = 24 * hour;
+            thresholds.Add(60, "{0} seconds ago");
+            thresholds.Add(minute * 2, "a minute ago");
+            thresholds.Add(45 * minute, "{0} minutes ago");
+            thresholds.Add(120 * minute, "an hour ago");
+            thresholds.Add(day, "{0} hours ago");
+            thresholds.Add(day * 2, "yesterday");
+            thresholds.Add(day * 30, "{0} days ago");
+            thresholds.Add(day * 365, "{0} months ago");
+            thresholds.Add(long.MaxValue, "{0} years ago");
+            long since = (DateTime.Now.Ticks - theDate.Ticks) / 10000000;
+            foreach (long threshold in thresholds.Keys)
+            {
+                if (since < threshold)
+                {
+                    TimeSpan t = new TimeSpan((DateTime.Now.Ticks - theDate.Ticks));
+                    return string.Format(thresholds[threshold], (t.Days > 365 ? t.Days / 365 : (t.Days > 0 ? t.Days : (t.Hours > 0 ? t.Hours : (t.Minutes > 0 ? t.Minutes : (t.Seconds > 0 ? t.Seconds : 0))))).ToString());
+                }
+            }
+            return "";
+        }
     }
 }

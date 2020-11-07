@@ -1,6 +1,9 @@
 ﻿@model Forum_Project.ViewModels.ThreadViewModel
 
 @inject UserManager<ApplicationUser> userManager
+@inject SignInManager<ApplicationUser> signInManager
+@inject Forum_Project.ViewModels.PostViewModel postViewModel
+@inject Forum_Project.Services.ForumService forumService
 
 <head>
 
@@ -15,7 +18,10 @@
             <div class="category mb-0 p-4 rounded-top text-light">
                 <h2 class="h4">
                     @Model.ForumName
-                    <a class="btn btn-primary float-right" asp-action="AddPost" asp-controller="Forum" asp-route-forumId="@Model.ThreadId">Add Post</a>
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <button class="btn btn-primary float-right" id="addpostbutton">Add Post</button>
+                    }
                 </h2>
             </div>
         </div>
@@ -41,7 +47,24 @@
             </tbody>
         </table>
     </div>
+
+    <div class="card-body newpostsection" style="padding:0px; border:none; display:none">
+        <span class="font-weight-bold">Add a post</span>
+
+        <form action="AddPost" method="post">
+            <div asp-validation-summary="All"></div>
+            <input type="hidden" name="ForumId" value="@Model.ForumId" />
+            <input type="hidden" name="ThreadId" value="@Model.ThreadId" />
+
+            <input asp-for="@postViewModel.Message" name="Message" class="form-control" style="width:100%" />
+            <span asp-validation-for="@postViewModel.Message"></span>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:5px">Post</button>
+        </form>
+    </div>
+
 </div>
+
 
 <div class="table-responsive mb-0">
     <table class="table" style="border-collapse: collapse">
@@ -63,26 +86,69 @@
             <td style="border:none; padding-bottom: 0; padding-right:0">
                 <div class="card card-body">
                     <text class="float-right" style="font-size: 12px">
-                        Posted by @post.Data.AuthorName
+                        <span class="font-weight-bold">@post.Data.AuthorName</span>
+                        @forumService.RelativeDate(@post.Data.PostedOn)
                     </text>
-                    <h7>
-                        @post.Data.Message
-                        @if (userManager.GetUserId(User) == post.Data.UserId)
-                        {
-                            <i class="fas fa-trash-alt float-right" style="margin: 5px"></i>
-                            <i class="fas fa-edit float-right" style="margin: 5px"></i>
-                        }
 
-                        <i class="fas fa-reply float-right" style="margin: 5px"></i>
+                    <h7>
+                        <input class="float-left" readonly value="@post.Data.Message" style="border:none; width:80%">
+
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            @if (userManager.GetUserId(User) == post.Data.UserId)
+                            {
+                                <form action="DeletePost" method="post">
+                                    <input type="hidden" name="PostId" value="@post.Data.PostId" />
+                                    <input type="hidden" name="ThreadId" value="@Model.ThreadId" />
+
+                                    <a href="#" onclick="$(this).closest('form').submit()" class="deleteButton"><i class="fas fa-trash-alt float-right" style="margin: 5px"></i></a>
+                                </form>
+
+                                <a href="#" class="editbutton"><i class="fas fa-edit float-right" style="margin: 5px"></i></a>
+                            }
+
+                            <a class="replybutton" href="#"><i class="fas fa-reply float-right" style="margin: 5px"></i></a>
+                        }
 
 
                     </h7>
+
+                    <div class="card-body editpostsection" style="padding:0px; border:none; display:none">
+                        <form action="EditPost" method="post">
+                            <div asp-validation-summary="All"></div>
+                            <input type="hidden" name="PostId" value="@post.Data.PostId" />
+                            <input type="hidden" name="ForumId" value="@Model.ForumId" />
+                            <input type="hidden" name="ThreadId" value="@Model.ThreadId" />
+
+                            <label class="font-weight-bold">Edit post</label>
+                            <input asp-for="@postViewModel.Message" name="Message" class="form-control" style="width:100%" value="@post.Data.Message" />
+                            <span asp-validation-for="@postViewModel.Message"></span>
+
+                            <button type="submit" class="btn btn-primary" style="margin-top:5px">Edit</button>
+                        </form>
+                    </div>
+
+                    <div class="card-body replypostsection" style="padding:0px; border:none; display:none">
+                        <form action="AddPost" method="post">
+                            <div asp-validation-summary="All"></div>
+                            <input type="hidden" name="ParentId" value="@post.Data.PostId" />
+                            <input type="hidden" name="ForumId" value="@Model.ForumId" />
+                            <input type="hidden" name="ThreadId" value="@Model.ThreadId" />
+
+                            <label class="font-weight-bold">Add a reply</label>
+                            <input asp-for="@postViewModel.Message" name="Message" class="form-control" style="width:100%" />
+                            <span asp-validation-for="@postViewModel.Message"></span>
+
+                            <button type="submit" class="btn btn-primary" style="margin-top:5px">Post</button>
+                        </form>
+                    </div>
                 </div>
 
                 @if (post.Children.Count > 0)
                 {
-                    <a class="header" href="#">View Replies</a>
+                    <a class="header" style="padding-left:10px" href="#">View Replies</a>
                 }
+
 
                 @for (int i = 0; i < post.Children.Count; i++)
                 {
@@ -102,6 +168,25 @@
 
 <script type="text/javascript">
 
+    $('.editbutton').click(function (e) {
+        e.preventDefault();
+
+        $(this).parent().siblings('.editpostsection').toggle(400);
+    });
+
+    $('.replybutton').click(function (e) {
+        e.preventDefault();
+
+        $(this).parent().siblings('.replypostsection').toggle(400);
+    });
+
+    $('#addpostbutton').click(function (e) {
+        e.preventDefault();
+
+        $(".newpostsection").toggle(400);
+
+    });
+
     $('.header').click(function (e) {
         // Prevent jumping to top of screen when clicking on anchor element
         e.preventDefault();
@@ -112,6 +197,6 @@
         var element = jQuery(this).nextAll('.table-responsive');
         // Toggle their class collapse
         element.toggle(400);
-    }); 
+    });
 
 </script>

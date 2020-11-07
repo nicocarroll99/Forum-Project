@@ -2,6 +2,7 @@ using Forum_Project.Context;
 using Forum_Project.Models;
 using Forum_Project.Security;
 using Forum_Project.Services;
+using Forum_Project.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -112,6 +113,7 @@ namespace Forum_Project
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
             services.AddSingleton<DataProtectionPurposeStrings>();
             services.AddScoped<ForumService, ForumService>();
+            services.AddTransient<PostViewModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
