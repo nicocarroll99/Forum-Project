@@ -109,11 +109,14 @@ namespace Forum_Project
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+            services.AddScoped<ForumDbContext>();
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
             services.AddSingleton<DataProtectionPurposeStrings>();
             services.AddScoped<ForumService, ForumService>();
             services.AddTransient<PostViewModel>();
+            services.AddTransient<ForumViewModel>();
+            services.AddTransient<ThreadViewModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

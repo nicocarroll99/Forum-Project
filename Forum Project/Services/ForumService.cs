@@ -84,6 +84,18 @@ namespace Forum_Project.Services
             await forumDbContext.SaveChangesAsync();
         }
 
+        public async Task EditForum(Forums forum)
+        {
+            forumDbContext.Forums.Update(forum);
+            await forumDbContext.SaveChangesAsync();
+        }
+
+        public async Task EditThread(Threads thread)
+        {
+            forumDbContext.Threads.Update(thread);
+            await forumDbContext.SaveChangesAsync();
+        }
+
         public async Task<List<ForumViewModel>> GetForums()
         {
             List<ForumViewModel> forumViewModels = new List<ForumViewModel>();
@@ -105,6 +117,37 @@ namespace Forum_Project.Services
             }
 
             return forumViewModels;
+        }
+
+        public async Task DeleteForum(string forumId)
+        {
+            var posts = forumDbContext.Posts.Where(p => p.ForumId == forumId);
+            forumDbContext.RemoveRange(posts);
+
+            var threads = forumDbContext.Threads.Where(t => t.ForumId == forumId);
+            forumDbContext.RemoveRange(threads);
+
+            var forum = forumDbContext.Forums.Where(f => f.ForumId == forumId);
+            forumDbContext.RemoveRange(forum);
+
+            await forumDbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteThread(string threadId)
+        {
+            var posts = forumDbContext.Posts.Where(p => p.ThreadId == threadId);
+            forumDbContext.RemoveRange(posts);
+
+            var threads = forumDbContext.Threads.Where(t => t.ThreadId == threadId);
+            forumDbContext.RemoveRange(threads);
+
+            await forumDbContext.SaveChangesAsync();
+        }
+
+        public Forums GetForumModel(string forumId)
+        {
+            var q = forumDbContext.Forums.Where(f => f.ForumId == forumId).FirstOrDefault();
+            return q;
         }
 
         public ForumViewModel GetForum(string forumId)
@@ -144,6 +187,11 @@ namespace Forum_Project.Services
 
             return threadViewModel;
         }
+        public Threads GetThreadModel(string threadId)
+        {
+            var q = forumDbContext.Threads.Where(f => f.ThreadId == threadId).FirstOrDefault();
+            return q;
+        }
 
         public async Task<Posts> GetPost(string postId)
         {
@@ -174,6 +222,7 @@ namespace Forum_Project.Services
                     ThreadId = thread.ThreadId,
                     ThreadTitle = thread.ThreadTitle,
                     ForumId = thread.ForumId,
+                    PostedOn = thread.PostedOn,
                     Subject = thread.Subject,
                     AuthorName = thread.AuthorName,
                     UserId = thread.UserId
@@ -204,7 +253,7 @@ namespace Forum_Project.Services
             List<Posts> all = forumDbContext.Posts.Include(x => x.Parent).Where(p => p.ThreadId == threadId).ToList();
             TreeExtensions.ITree<Posts> virtualRootNode = all.ToTree((parent, child) => child.ParentId == parent.PostId);
             List<TreeExtensions.ITree<Posts>> rootLevelPostsWithSubTree = virtualRootNode.Children.ToList();
-            List<TreeExtensions.ITree<Posts>> flattenedListOfPostNodes = virtualRootNode.Children.Flatten(node => node.Children).ToList();
+            //List<TreeExtensions.ITree<Posts>> flattenedListOfPostNodes = virtualRootNode.Children.Flatten(node => node.Children).ToList();
 
             return rootLevelPostsWithSubTree;
         }
