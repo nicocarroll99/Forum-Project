@@ -118,12 +118,12 @@
                                     <form method="post" class="float-right" style="margin-left:5px" asp-action="DeleteForum" asp-controller="Forum" asp-route-forumId="@Model[i].ForumId">
                                         <span style="display:none" id="confirmDeleteSpan_@Model[i].ForumId">
                                             <span>Delete this entire forum?</span>
-                                            <button type="submit" class="btn btn-danger">Yes</button>
-                                            <a href="#" class="btn btn-primary" onclick="confirmDelete('@Model[i].ForumId', false)">No</a>
+                                            <button type="submit" class="btn btn-danger deletebutton">Yes</button>
+                                            <a href="#" class="btn btn-primary deletebutton" onclick="confirmDelete('@Model[i].ForumId', false)">No</a>
                                         </span>
 
                                         <span id="deleteSpan_@Model[i].ForumId">
-                                            <a href="#" class="btn btn-danger" onclick="confirmDelete('@Model[i].ForumId', true)">Delete</a>
+                                            <a href="#" class="btn btn-danger deletebutton" onclick="confirmDelete('@Model[i].ForumId', true)">Delete</a>
                                         </span>
                                     </form>
 
@@ -247,6 +247,10 @@
 
         $(".newpostsection").toggle(400);
 
+    });
+
+    $('.deletebutton').click(function (e) {
+        e.preventDefault();
     });
 
     $('.editforumbutton').click(function (e) {
